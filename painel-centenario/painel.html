@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Chamadas - Hospital Centenario</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <header>
+        <h1>Hospital Centenário</h1>
+        <h2>Pronto-Socorro</h2>
+    </header>
+
+    <main>
+        <h3>Paciente Atual</h3>
+        <div id="pacienteAtual">--</div>
+        <h3>Consultórios</h3>
+        <div id="consultorioAtual">--</div>
+        <div id="historico">
+            <h3>Ultimas Chamadas</h3>
+            <ul id="listaUltimas">
+            </ul>
+        </div>
+    </main>
+
+    <script src="../script/script.js"></script>
+  <script>
+    async function atualizarPainel() {
+    try {
+      const response = await fetch("http://192.168.1.3:3000/chamadas");
+      if (response.ok) {
+        const chamadas = await response.json();
+
+        // Atualiza o paciente atual e consultório
+        const pacienteAtual = document.getElementById("pacienteAtual");
+        const consultorioAtual = document.getElementById("consultorioAtual");
+        const listaUltimas = document.getElementById("listaUltimas");
+
+        if (chamadas.length > 0) {
+          const chamadaAtual = chamadas[0];
+          pacienteAtual.textContent = chamadaAtual.paciente;
+          consultorioAtual.textContent = chamadaAtual.consultorio;
+
+          // Atualiza o histórico
+          listaUltimas.innerHTML = "";
+          chamadas.slice(1, 6).forEach((chamada) => {
+            const li = document.createElement("li");
+            li.textContent = `${chamada.consultorio} - ${chamada.paciente}`;
+            listaUltimas.appendChild(li);
+          });
+        } else {
+          pacienteAtual.textContent = "--";
+          consultorioAtual.textContent = "--";
+          listaUltimas.innerHTML = "<li>Sem chamadas recentes</li>";
+        }
+      } else {
+        console.error("Erro ao buscar chamadas.");
+      }
+    } catch (error) {
+      console.error("Erro ao conectar ao servidor:", error);
+    }
+  }
+
+  // Atualiza o painel a cada 5 segundos
+  setInterval(atualizarPainel, 5000);
+
+  // Atualiza o painel ao carregar a página
+  atualizarPainel();
+  </script>
+
+</body>
+</html>

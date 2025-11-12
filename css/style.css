@@ -1,0 +1,98 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #002b55;
+  color: white;
+  margin: 0;
+  text-align: center;
+}
+
+header {
+  background-color: #004080;
+  padding: 20px 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+header h1 {
+  margin: 0;
+  font-size: 2em;
+}
+
+header h2 {
+  margin: 0;
+  font-weight: 400;
+  color: #ffcc00;
+}
+
+main {
+  margin-top: 2em;
+}
+
+/* Painel Público */
+#pacienteAtual {
+  font-size: 3em;
+  margin-top: 1em;
+}
+
+#consultorioAtual {
+  font-size: 5em;
+  color: #ffcc00;
+  margin: 0.5em 0;
+}
+
+#historico {
+  background-color: #003366;
+  width: 60%;
+  margin: 2em auto;
+  padding: 1em;
+  border-radius: 10px;
+  text-align: left;
+}
+
+#historico h3 {
+  text-align: center;
+}
+
+/* Painel Administrativo */
+form {
+  background-color: #003366;
+  width: 320px;
+  margin: 3em auto;
+  padding: 2em;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8em;
+}
+
+label {
+  text-align: left;
+  font-weight: bold;
+}
+
+input {
+  padding: 0.5em;
+  border: none;
+  border-radius: 5px;
+}
+
+button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0.8em;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+button:hover {
+  background-color: #005dc1;
+}
+
+#simulacao {
+  background: #001f3d;
+  width: 60%;
+  margin: 2em auto;
+  padding: 1em;
+  border-radius: 10px;
+}
