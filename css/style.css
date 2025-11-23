@@ -1,98 +1,290 @@
+/* Estilo base */
 body {
-  font-family: Arial, sans-serif;
-  background-color: #002b55;
-  color: white;
-  margin: 0;
-  text-align: center;
+    font-family: Arial, sans-serif;
+    background-color: #002b55;
+    color: white;
+    margin: 0;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
 }
 
 header {
-  background-color: #004080;
-  padding: 20px 0;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    background-color: #004080;
+    padding: 20px 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    margin-bottom: 20px;
 }
 
 header h1 {
-  margin: 0;
-  font-size: 2em;
+    margin: 0;
+    font-size: 2.5em;
 }
 
 header h2 {
-  margin: 0;
-  font-weight: 400;
-  color: #ffcc00;
+    margin: 0;
+    font-weight: 400;
+    color: #ffcc00;
 }
 
+/* Formulário Painel Administrativo */
+form {
+    background-color: #003366;
+    width: 40%;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column; /* Alinha os elementos verticalmente */
+    justify-content: center;
+    align-items: center;
+    gap: 15px; /* Espaçamento entre os elementos */
+}
+
+form label {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: white;
+    text-align: left;
+    width: 100%; /* Alinha o texto à esquerda */
+}
+
+form input {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    width: 100%; /* Faz o input ocupar toda a largura */
+}
+
+form button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    transition: all 0.3s ease; /* Adiciona animação suave */
+}
+
+form button:hover {
+    background-color: #005dc1;
+    transform: scale(1.1); /* Faz o botão expandir ao passar o mouse */
+}
+
+/* Layout principal */
 main {
-  margin-top: 2em;
+    display: grid;
+    grid-template-columns: 1fr 2fr; /* Define duas colunas: 1 para paciente/chamadas e 2 para o iframe */
+    grid-template-rows: 1fr 1fr; /* Define duas linhas: paciente e chamadas na primeira coluna */
+    gap: 10px;
+    height: 100%;
+    padding: 10px;
+    box-sizing: border-box;
 }
 
-/* Painel Público */
+/* Paciente e Consultório */
+#pacienteConsultorio {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+    background-color: #007bff;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+#pacienteConsultorio h1 {
+    margin: 0;
+    font-size: 2.5em;
+    margin-bottom: 20px;
+}
+
 #pacienteAtual {
-  font-size: 3em;
-  margin-top: 1em;
+    font-size: 3.5em;
+    font-weight: bold;
+    margin: 20px 0;
 }
 
 #consultorioAtual {
-  font-size: 5em;
-  color: #ffcc00;
-  margin: 0.5em 0;
+    font-size: 6em;
+    color: #ffcc00;
+    margin-top: 20px;
 }
 
-#historico {
-  background-color: #003366;
-  width: 60%;
-  margin: 2em auto;
-  padding: 1em;
-  border-radius: 10px;
-  text-align: left;
+/*Seletor de setor*/
+#setorSelector {
+    text-align: center;
+    margin-bottom: 20px;
 }
 
-#historico h3 {
-  text-align: center;
+#setorSelector h3 {
+    font-size: 1.5em;
+    color: white;
+    margin-bottom: 10px;
 }
 
-/* Painel Administrativo */
-form {
-  background-color: #003366;
-  width: 320px;
-  margin: 3em auto;
-  padding: 2em;
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 0.8em;
+.slider-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
 }
 
-label {
-  text-align: left;
-  font-weight: bold;
+.slider {
+    position: relative;
+    width: 100px;
+    height: 40px;
+    background-color: #007bff;
+    border-radius: 20px;
+    cursor: pointer;
 }
 
-input {
-  padding: 0.5em;
-  border: none;
-  border-radius: 5px;
+.slider-handle {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 30px;
+    height: 30px;
+    background-color: white;
+    border-radius: 50%;
+    transition: all 0.3s ease;
 }
 
-button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 0.8em;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
+#sliderHandle.ps {
+    left: 5px;
 }
 
-button:hover {
-  background-color: #005dc1;
+#sliderHandle.ambu {
+    left: 65px;
 }
 
-#simulacao {
-  background: #001f3d;
-  width: 60%;
-  margin: 2em auto;
-  padding: 1em;
-  border-radius: 10px;
+#slider span {
+    font-size: 1em;
+    color: white;
+    font-weight: bold;
+}
+
+/* Últimas Chamadas */
+#historicoChamadas {
+    grid-column: 1 / 2;
+    grid-row: 2 / 3;
+    background-color: #003366;
+    color: white;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+#historicoChamadas h2 {
+    text-align: center;
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+#listaUltimas li {
+    font-size: 1.8em;
+    font-weight: bold;
+    margin: 5px 0;
+}
+
+/* Streaming ou Novela */
+#streamingNovela {
+    grid-column: 2 / 3;
+    grid-row: 1 / 3; /* Ocupa as duas linhas */
+    background-color: #000;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/*PopUp de sucesso*/
+.popup {
+    display: none; /* Inicialmente escondido */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Fundo semitransparente */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Sobrepõe os elementos da tela */
+}
+
+.popup-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    animation: fadeInOut 2s ease; /* Animação de entrada e saída */
+}
+
+.popup-icon {
+    font-size: 2em;
+    margin-bottom: 10px;
+}
+
+#popup-message {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Animação de entrada e saída */
+@keyframes fadeInOut {
+    0% {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    20% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    80% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+}
+
+iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 10px;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    main {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+    }
+
+    #pacienteConsultorio, #historicoChamadas, #streamingNovela {
+        grid-column: 1 / 2;
+        grid-row: auto;
+    }
 }

@@ -5,12 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel Administrativo - Hospital Centenário</title>
     <link rel="stylesheet" href="../css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <header>
         <h1>Painel Administrativo</h1>
         <h2>Hospital Centenário</h2>
     </header>
+
+   <div id="setorSelector">
+        <h3>Selecione o Setor:</h3>
+        <label class="switch">
+            <input type="checkbox" id="slider">
+            <span class="slider-round"></span>
+        </label>
+        <span id="setorLabel">PS</span>
+    </div>
 
     <form id="formChamada">
         <label>Nome do Paciente:</label>
@@ -20,59 +30,13 @@
         <button type="button" id="btnChamar">Chamar Paciente</button>
     </form>
 
-    <div id="simulacao">
-        <h3>Simulação de chamada</h3>
-        <p id="saida"> Aguardando nova chamada...</p>
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <span class="popup-icon">✔️</span>
+            <p id="popup-message">Chamada registrada com sucesso!</p>
+        </div>
     </div>
 
-    <script src="../script/script.js"></script>
-  <script>
-    const saida = document.getElementById("saida");
-
-    document.getElementById("btnChamar").addEventListener("click", async () => {
-      const paciente = document.getElementById("paciente").value.trim();
-
-      if (!paciente || !consultorio) {
-        alert("Por favor preencha todos os campos.");
-        return;
-      }
-
-      const chamada = {
-        paciente,
-        consultorio,
-        hora: new Date().toLocaleTimeString("pt-BR", { hour: '2-digit', minute: '2-digit' }),
-      };
-
-      try {
-        //envia os dados para o backend
-        const response = await fetch("http://192.168.1.3:3000/chamada", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(chamada)
-        });
-        
-        if (response.ok) {
-          const result = await response.json();
-          alert(result.message);
-
-          //atualiza tela admin localmente
-          saida.innerHTML = `<strong>Paciente:</strong> ${chamada.paciente} <br>
-                             <strong>Consultório:</strong> ${chamada.consultorio} <br>`;
-
-        //limpa os campos
-        document.getElementById("paciente").value = "";
-        document.getElementById("consultorio").value = "";
-      } else {
-        alert("Erro ao registrar chamada.");
-      }
-    } catch (error) {
-      console.error("Erro ao enviar chamada:", error);
-      alert("Erro ao conectar com o servidor.");
-    }
-    });
-  </script>
-
+    <script src="../script/script-admin.js"></script>
 </body>
 </html>
