@@ -11,6 +11,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 const consultorioAtual = document.getElementById("consultorioAtual");
                 const listaUltimas = document.getElementById("listaUltimas");
                 const alertaSom = document.getElementById("alertaSom");
+                const pacienteConsultorio = document.getElementById("pacienteConsultorio");
+                const streamingNovela = document.getElementById("streamingNovela");
+                const historicoChamadas = document.getElementById("historicoChamadas");
 
                 // Verifica se os elementos existem antes de manipulá-los
                 if (!pacienteAtual || !consultorioAtual || !listaUltimas || !alertaSom) {
@@ -26,6 +29,13 @@ document.addEventListener("DOMContentLoaded", () => {
                         alertaSom.play().catch((error) => {
                             console.error("Erro ao reproduzir som:", error);
                         });
+
+                        //expande a area do paciente apenas se for um paciente novo
+                        if (pacienteAnterior !== chamadaAtual.paciente) {
+                            pacienteConsultorio.classList.add("expandido");
+                            streamingNovela.classList.add("hidden");
+                            historicoChamadas.classList.add("hidden");
+                        }
                     }
 
                     // Atualiza o paciente anterior
@@ -47,6 +57,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     pacienteAtual.textContent = "--";
                     consultorioAtual.textContent = "--";
                     listaUltimas.innerHTML = "<li>Sem chamadas recentes</li>";
+                    
+                    //reverte a expansão
+                    pacienteConsultorio.classList.remove("expandido");
+                    streamingNovela.classList.remove("hidden");
+                    historicoChamadas.classList.remove("hidden");
                 }
             } else {
                 console.error("Erro ao buscar chamadas.");

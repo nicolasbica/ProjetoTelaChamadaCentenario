@@ -96,11 +96,19 @@ main {
     color: white;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     border-radius: 10px;
     padding: 30px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.5s ease; /*Transição suave*/
+}
+
+#pacienteConsultorio.expandido {
+    grid-column: 1 / 3; /*Ocupa as duas colunas*/
+    grid-row: 1 / 3; /*Ocupa as duas linhas*/
+    padding: 50px; /*Ajusta o espaçamento interno*/
+    transition: all 0.5s ease; /*Transição suave*/
 }
 
 #pacienteConsultorio h1 {
@@ -121,7 +129,7 @@ main {
     margin-top: 20px;
 }
 
-/*Seletor de setor*/
+/* Seletor de Setor */
 #setorSelector {
     text-align: center;
     margin-bottom: 20px;
@@ -137,41 +145,66 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 20px;
 }
 
-.slider {
-    position: relative;
-    width: 100px;
-    height: 40px;
-    background-color: #007bff;
-    border-radius: 20px;
-    cursor: pointer;
-}
-
-.slider-handle {
-    position: absolute;
-    top: 5px;
-    left: 5px;
-    width: 30px;
-    height: 30px;
-    background-color: white;
-    border-radius: 50%;
-    transition: all 0.3s ease;
-}
-
-#sliderHandle.ps {
-    left: 5px;
-}
-
-#sliderHandle.ambu {
-    left: 65px;
-}
-
-#slider span {
-    font-size: 1em;
+.setor-label {
+    font-size: 1.2em;
     color: white;
     font-weight: bold;
+}
+
+/*Icone dos setores*/
+.setor-label i {
+    margin-right: 8px; /* Espaçamento entre o ícone e o texto */
+    font-size: 1.2em; /* Ajusta o tamanho do ícone */
+    color: white; /* Cor dos ícones */
+}
+
+/* Botão deslizante */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 120px; /* Largura do botão */
+    height: 50px; /* Altura do botão */
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider-round {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #007bff; /* Fundo azul padrão */
+    border-radius: 50px; /* Torna o botão arredondado */
+    transition: 0.4s;
+}
+
+.slider-round:before {
+    position: absolute;
+    content: "";
+    height: 40px;
+    width: 40px;
+    left: 5px;
+    bottom: 5px;
+    background-color: white;
+    border-radius: 50%;
+    transition: 0.4s;
+}
+
+input:checked + .slider-round {
+    background-color: #007bff; /* Fundo azul quando selecionado */
+}
+
+input:checked + .slider-round:before {
+    transform: translateX(70px); /* Move o botão para o lado direito */
 }
 
 /* Últimas Chamadas */
@@ -188,6 +221,12 @@ main {
     border-radius: 10px;
     padding: 20px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    transition: opacity 0.5s ease; /*suavisa a desaparecimento*/
+}
+
+.historico-chamadas.hidden {
+    opacity: 0; /*esconde a area do historico*/
+    pointer-events: none; /*desativa interações*/
 }
 
 #historicoChamadas h2 {
@@ -207,12 +246,17 @@ main {
     grid-column: 2 / 3;
     grid-row: 1 / 3; /* Ocupa as duas linhas */
     background-color: #000;
-    color: white;
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    transition: opacity 0.5s ease; /*suavisa a desaparecimento*/
+}
+
+.streaming-novela.hidden {
+    opacity: 0; /*esconde a area da novela*/
+    pointer-events: none; /*desativa interações*/
 }
 
 /*PopUp de sucesso*/

@@ -6,6 +6,7 @@
     <title>Painel Administrativo - Hospital Centenário</title>
     <link rel="stylesheet" href="../css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <header>
@@ -15,11 +16,18 @@
 
    <div id="setorSelector">
         <h3>Selecione o Setor:</h3>
-        <label class="switch">
-            <input type="checkbox" id="slider">
-            <span class="slider-round"></span>
-        </label>
-        <span id="setorLabel">PS</span>
+        <div class="slider-container">
+            <span class="setor-label">
+                <i class="fas fa-cross"></i> Pronto Socorro
+            </span>
+            <label class="switch">
+                <input type="checkbox" id="slider">
+                <span class="slider-round"></span>
+            </label>
+            <span class="setor-label">
+                <i class="fas fa-syringe"></i> Ambulatório
+            </span>
+        </div>
     </div>
 
     <form id="formChamada">

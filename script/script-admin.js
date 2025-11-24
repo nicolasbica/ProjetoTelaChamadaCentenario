@@ -1,19 +1,15 @@
-let setorAtual = "ProntoSocorro"; // Define o setor padrão como Pronto-Socorro
+let setorAtual = "ProntoSocorro"; // Define o setor padrão como Pronto Socorro
 
-document.getElementById("slider").addEventListener("click", () => {
-    const sliderHandle = document.getElementById("sliderHandle");
+document.getElementById("slider").addEventListener("change", () => {
+    const slider = document.getElementById("slider");
 
-    if (setorAtual === "ProntoSocorro") {
+    if (slider.checked) {
         setorAtual = "Ambulatorio";
-        sliderHandle.classList.remove("ps");
-        sliderHandle.classList.add("ambu");
         document.getElementById("consultorio").disabled = false; // Habilita o campo de consultório
         document.getElementById("consultorio").placeholder = "Digite o número do consultório";
         document.getElementById("consultorio").value = ""; // Limpa o valor do campo
     } else {
         setorAtual = "ProntoSocorro";
-        sliderHandle.classList.remove("ambu");
-        sliderHandle.classList.add("ps");
         document.getElementById("consultorio").disabled = true; // Desabilita o campo de consultório
         document.getElementById("consultorio").placeholder = "Acolhimento";
         document.getElementById("consultorio").value = "Acolhimento"; // Define o valor como "Acolhimento"
