@@ -161,6 +161,28 @@ main {
     color: white; /* Cor dos ícones */
 }
 
+/* Animação suave para expansão e retração */
+#pacienteConsultorio {
+    transition: all 0.5s ease; /* Suaviza a expansão/retração */
+}
+
+#streamingNovela,
+#historicoChamadas {
+    transition: opacity 0.5s ease; /* Suaviza o desaparecimento/reaparecimento */
+}
+
+#pacienteConsultorio.expandido {
+    grid-column: 1 / 3; /* Ocupa as duas colunas */
+    grid-row: 1 / 3; /* Ocupa as duas linhas */
+    padding: 50px; /* Ajusta o espaçamento interno */
+}
+
+#streamingNovela.hidden,
+#historicoChamadas.hidden {
+    opacity: 0; /* Esconde os elementos suavemente */
+    pointer-events: none; /* Desativa interações */
+}
+
 /* Botão deslizante */
 .switch {
     position: relative;

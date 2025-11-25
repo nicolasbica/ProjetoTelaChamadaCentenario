@@ -1,79 +1,114 @@
 document.addEventListener("DOMContentLoaded", () => {
-    let pacienteAnterior = null; // Inicializa com null para evitar som ao recarregar
+    const STORAGE_KEY = "ultimoPacienteKey";
+    let temporizadorRetracao = null;
+    let primeiraExecucao = true; // Evita tocar som/animar na primeira execução
+    let ultimoPacienteExibido = localStorage.getItem(STORAGE_KEY); // Recupera o último paciente salvo
+
+    function getEls() {
+        return {
+            pacienteEl: document.getElementById("pacienteAtual"),
+            consultorioEl: document.getElementById("consultorioAtual"),
+            listaEl: document.getElementById("listaUltimas"),
+            alertaSom: document.getElementById("alertaSom"),
+            pacienteBox: document.getElementById("pacienteConsultorio"),
+            streaming: document.getElementById("streamingNovela"),
+            historico: document.getElementById("historicoChamadas"),
+        };
+    }
+
+    function expandirTela() {
+        const { pacienteBox, streaming, historico } = getEls();
+        if (!pacienteBox || !streaming || !historico) return;
+        pacienteBox.classList.add("expandido");
+        streaming.classList.add("hidden");
+        historico.classList.add("hidden");
+    }
+
+    function retrairTela() {
+        const { pacienteBox, streaming, historico } = getEls();
+        if (!pacienteBox || !streaming || !historico) return;
+        pacienteBox.classList.remove("expandido");
+        streaming.classList.remove("hidden");
+        historico.classList.remove("hidden");
+        clearTimeout(temporizadorRetracao);
+        temporizadorRetracao = null;
+    }
 
     async function atualizarPainel() {
         try {
             const response = await fetch("http://localhost:3000/chamadas");
-            if (response.ok) {
-                const chamadas = await response.json();
+            if (!response.ok) {
+                console.error("Erro ao buscar chamadas:", response.status);
+                return;
+            }
 
-                const pacienteAtual = document.getElementById("pacienteAtual");
-                const consultorioAtual = document.getElementById("consultorioAtual");
-                const listaUltimas = document.getElementById("listaUltimas");
-                const alertaSom = document.getElementById("alertaSom");
-                const pacienteConsultorio = document.getElementById("pacienteConsultorio");
-                const streamingNovela = document.getElementById("streamingNovela");
-                const historicoChamadas = document.getElementById("historicoChamadas");
+            const chamadas = await response.json();
+            const { pacienteEl, consultorioEl, listaEl, alertaSom } = getEls();
+            if (!pacienteEl || !consultorioEl || !listaEl) {
+                console.error("Elementos do DOM não encontrados.");
+                return;
+            }
 
-                // Verifica se os elementos existem antes de manipulá-los
-                if (!pacienteAtual || !consultorioAtual || !listaUltimas || !alertaSom) {
-                    console.error("Erro: Elementos do DOM não encontrados.");
-                    return;
-                }
+            if (Array.isArray(chamadas) && chamadas.length > 0) {
+                const chamadaAtual = chamadas[0];
+                const nomePacienteAtual = (chamadaAtual.paciente || "").trim();
+                const nomeConsultorioAtual = (chamadaAtual.consultorio || "").trim();
+                const chaveAtual = `${nomePacienteAtual}||${nomeConsultorioAtual}`;
 
-                if (chamadas.length > 0) {
-                    const chamadaAtual = chamadas[0];
+                // Atualiza UI sempre
+                pacienteEl.textContent = nomePacienteAtual || "--";
+                consultorioEl.textContent = nomeConsultorioAtual || "--";
 
-                    // Toca som apenas se o paciente for diferente do anterior e válido
-                    if (pacienteAnterior !== chamadaAtual.paciente && chamadaAtual.paciente) {
-                        alertaSom.play().catch((error) => {
-                            console.error("Erro ao reproduzir som:", error);
-                        });
+               // Evita tocar som na primeira execução (ao carregar a página)
+                if (ultimoPacienteExibido === null) {
+                    ultimoPacienteExibido = chaveAtual;
+                    localStorage.setItem(STORAGE_KEY, ultimoPacienteExibido);
+                } else if (chaveAtual && chaveAtual !== ultimoPacienteExibido && !primeiraExecucao) {
+                    // Toca som apenas se não for a primeira execução
+                    ultimoPacienteExibido = chaveAtual;
+                    localStorage.setItem(STORAGE_KEY, ultimoPacienteExibido);
 
-                        //expande a area do paciente apenas se for um paciente novo
-                        if (pacienteAnterior !== chamadaAtual.paciente) {
-                            pacienteConsultorio.classList.add("expandido");
-                            streamingNovela.classList.add("hidden");
-                            historicoChamadas.classList.add("hidden");
+                    if (alertaSom) {
+                        try {
+                            alertaSom.currentTime = 0;
+                            await alertaSom.play();
+                        } catch (e) {
+                            console.warn("Não foi possível reproduzir o áudio:", e);
                         }
                     }
 
-                    // Atualiza o paciente anterior
-                    pacienteAnterior = chamadaAtual.paciente;
-
-                    // Atualiza os dados no painel
-                    pacienteAtual.textContent = chamadaAtual.paciente || "--";
-                    consultorioAtual.textContent = chamadaAtual.consultorio || "--";
-
-                    // Atualiza o histórico de chamadas
-                    listaUltimas.innerHTML = "";
-                    chamadas.slice(1, 6).forEach((chamada) => {
-                        const li = document.createElement("li");
-                        li.textContent = `${chamada.consultorio} - ${chamada.paciente}`;
-                        listaUltimas.appendChild(li);
-                    });
-                } else {
-                    // Caso não haja chamadas
-                    pacienteAtual.textContent = "--";
-                    consultorioAtual.textContent = "--";
-                    listaUltimas.innerHTML = "<li>Sem chamadas recentes</li>";
-                    
-                    //reverte a expansão
-                    pacienteConsultorio.classList.remove("expandido");
-                    streamingNovela.classList.remove("hidden");
-                    historicoChamadas.classList.remove("hidden");
+                    expandirTela();
+                    clearTimeout(temporizadorRetracao);
+                    temporizadorRetracao = setTimeout(retrairTela, 7000);
                 }
+                // Se mudou mas é a primeira execução, grava silenciosamente
+                else if (chaveAtual && chaveAtual !== ultimoPacienteExibido && primeiraExecucao) {
+                    ultimoPacienteExibido = chaveAtual;
+                    localStorage.setItem(STORAGE_KEY, ultimoPacienteExibido);
+                }
+
+                // Atualiza lista de últimas chamadas
+                listaEl.innerHTML = "";
+                chamadas.slice(1, 6).forEach((item) => {
+                    const li = document.createElement("li");
+                    li.textContent = `${item.consultorio} - ${item.paciente}`;
+                    listaEl.appendChild(li);
+                });
             } else {
-                console.error("Erro ao buscar chamadas.");
+                // Sem chamadas: retraia e não limpe o storage (evita falso positivo por oscilação)
+                retrairTela();
+                pacienteEl.textContent = "--";
+                consultorioEl.textContent = "--";
+                listaEl.innerHTML = "<li>Sem chamadas recentes</li>";
             }
-        } catch (error) {
-            console.error("Erro ao conectar ao servidor:", error);
+        } catch (err) {
+            console.error("Erro de conexão:", err);
+        } finally {
+            primeiraExecucao = false; // Garante que a próxima mudança será considerada "nova"
         }
     }
 
-    // Atualiza o painel a cada 5 segundos
-    setInterval(atualizarPainel, 5000);
-
-    // Atualiza o painel ao carregar a página
+    // Inicializa
     atualizarPainel();
+    setInterval(atualizarPainel, 5000);
 });
