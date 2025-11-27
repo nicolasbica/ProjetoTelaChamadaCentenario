@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(cors());
 
 // Banco de dados SQLite
-const db = new sqlite3.Database('./hospital.db', (err) => {
+const db = new sqlite3.Database('./hospital.db', sqlite3.OPEN_READWRITE, (err) => {
     if (err) {
         console.error('Erro ao conectar ao banco de dados:', err.message);
     } else {

@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     const STORAGE_KEY = "ultimoPacienteKey";
+    const VIDEO_STORAGE_KEY = "videoatualkey"; //chave pra armazenar o video atual
     let temporizadorRetracao = null;
     let primeiraExecucao = true; // Evita tocar som/animar na primeira execução
     let ultimoPacienteExibido = localStorage.getItem(STORAGE_KEY); // Recupera o último paciente salvo
@@ -14,6 +15,19 @@ document.addEventListener("DOMContentLoaded", () => {
             streaming: document.getElementById("streamingNovela"),
             historico: document.getElementById("historicoChamadas"),
         };
+    }
+
+    function criarIframe(url) {
+        const { streaming } = getEls();
+        if (streaming) {
+            streaming.innerHTML = "";
+            const iframe = document.createElement("iframe");
+            iframe.id = "youtubePlayer";
+            iframe.src = url;
+            iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+            iframe.allowFullscreen = true;
+            streaming.appendChild(iframe);
+        }
     }
 
     function expandirTela() {
@@ -108,7 +122,27 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    function salvarVideoAtual() {
+        const videoAtual = localStorage.getItem(VIDEO_STORAGE_KEY);
+        if (videoAtual) {
+            localStorage.setItem(VIDEO_STORAGE_KEY, videoAtual);//salva a url do video no localstorage
+        }
+    }
+
+    function carregarVideoSalvo() {
+        const videoSalvo = localStorage.getItem(VIDEO_STORAGE_KEY);
+        if (videoSalvo) {
+            criarIframe(videoSalvo); //cria iframe com a url salva
+        }else {
+            criarIframe("https://www.youtube.com/embed/LLpNUqHVam8")//url padrao
+        }
+    }
+
     // Inicializa
+    carregarVideoSalvo();
     atualizarPainel();
     setInterval(atualizarPainel, 5000);
+
+    //salva o video atual antes de sair da pagina
+    window.addEventListener("beforeunload", salvarVideoAtual);
 });
