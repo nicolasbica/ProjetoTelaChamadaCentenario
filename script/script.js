@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function atualizarPainel() {
         try {
-            const response = await fetch("http//{window.location.hostname}:8080/api/chamadas");
+            const response = await fetch("http://{window.location.hostname}:8080/api/chamadas");
             if (!response.ok) {
                 console.error("Erro ao buscar chamadas:", response.status);
                 return;
