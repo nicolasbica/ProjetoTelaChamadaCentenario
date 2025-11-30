@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function atualizarPainel() {
         try {
-            const response = await fetch("http://localhost:3000/chamadas");
+            const response = await fetch("http://192.168.1.212/chamadas");
             if (!response.ok) {
                 console.error("Erro ao buscar chamadas:", response.status);
                 return;

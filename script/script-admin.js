@@ -39,7 +39,7 @@ document.getElementById("btnChamar").addEventListener("click", async () => {
     };
 
     try {
-        const response = await fetch("http://localhost:3000/chamada", {
+        const response = await fetch("http://192.168.1.212/chamada", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
