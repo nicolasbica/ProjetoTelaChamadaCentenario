@@ -43,22 +43,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
     
-    // ========== INICIALIZAR PAINEL (LIMPAR CHAMADAS ANTIGAS) ==========
-    const painelJaInicializado = sessionStorage.getItem(`painelInicializado_${setorPainel}`) === "true";
-    
-    if (!painelJaInicializado) {
-        console.log('🔧 Inicializando painel pela primeira vez...');
-        fetch(`http://localhost:3000/chamadas/inicializar/${setorPainel}`, {
-            method: 'POST'
-        })
-        .then(res => res.json())
-        .then(data => {
-            console.log(`🧹 Painel inicializado: ${data.chamadas_limpas || 0} chamadas antigas limpas`);
-            sessionStorage.setItem(`painelInicializado_${setorPainel}`, "true");
-        })
-        .catch(err => console.warn('⚠️ Erro ao inicializar painel:', err));
-    }
-    
     // ========== SISTEMA DE INICIALIZAÇÃO DE ÁUDIO ==========
     const audioJaInicializado = localStorage.getItem(CONFIG.AUDIO_INITIALIZED_KEY) === "true";
     
@@ -106,29 +90,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
     // ========== FUNÇÕES DE INTERFACE ==========
-    let youtubePlayer = null;
-    let iframeJaCriado = false;
-    
     function criarIframe(url) {
-        if (!elementos.streaming || iframeJaCriado) return;
+        if (!elementos.streaming) return;
         
-        console.log('🎬 Criando player do YouTube (apenas uma vez)...');
-        iframeJaCriado = true;
-        
-        // Criar iframe diretamente (mais confiável que a API)
-        const iframe = document.createElement('iframe');
-        iframe.id = 'youtubePlayer';
-        iframe.src = url + '?autoplay=1&rel=0&modestbranding=1';
-        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+        elementos.streaming.innerHTML = "";
+        const iframe = document.createElement("iframe");
+        iframe.id = "youtubePlayer";
+        iframe.src = url;
+        iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
         iframe.allowFullscreen = true;
-        iframe.style.width = '100%';
-        iframe.style.height = '100%';
-        iframe.style.border = 'none';
-        iframe.setAttribute('loading', 'eager');
         elementos.streaming.appendChild(iframe);
-        youtubePlayer = iframe;
-        
-        console.log('✅ Player criado com sucesso!');
     }
     
     function expandirTela() {
@@ -242,53 +213,32 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
     // ========== ATUALIZAR HISTÓRICO NA INTERFACE ==========
-    let ultimoHistoricoIds = [];
-    
     function atualizarHistorico(chamadas) {
         if (!elementos.listaEl) return;
         
+        elementos.listaEl.innerHTML = "";
+        
         if (!chamadas || chamadas.length === 0) {
-            if (ultimoHistoricoIds.length !== 0) {
-                elementos.listaEl.innerHTML = "<li style='opacity:0.5'>Sem chamadas recentes</li>";
-                ultimoHistoricoIds = [];
-            }
+            const li = document.createElement("li");
+            li.textContent = "Sem chamadas recentes";
+            li.style.opacity = "0.5";
+            elementos.listaEl.appendChild(li);
             return;
         }
         
-        // Pega as 5 mais recentes (apenas exibidas)
+        // Pega as 5 mais recentes (excluindo a atual se estiver exibindo)
         const historicoFiltrado = chamadas
-            .filter(c => c.exibida === 1)
+            .filter(c => c.id !== chamadaAtualId)
             .slice(0, 5);
         
-        if (historicoFiltrado.length === 0) {
-            if (ultimoHistoricoIds.length !== 0) {
-                elementos.listaEl.innerHTML = "<li style='opacity:0.5'>Sem chamadas recentes</li>";
-                ultimoHistoricoIds = [];
-            }
-            return;
-        }
-        
-        // Comparar IDs para detectar mudanças reais
-        const novosIds = historicoFiltrado.map(c => c.id).join(',');
-        
-        if (ultimoHistoricoIds.join(',') === novosIds) {
-            // Sem mudanças, não atualizar DOM
-            return;
-        }
-        
-        // Atualizar cache de IDs
-        ultimoHistoricoIds = historicoFiltrado.map(c => c.id);
-        
-        // Construir e atualizar HTML
-        const novoHTML = historicoFiltrado.map(chamada => `
-            <li>
-                <strong>${String(chamada.consultorio)}</strong> - ${String(chamada.paciente)}
+        historicoFiltrado.forEach((chamada) => {
+            const li = document.createElement("li");
+            li.innerHTML = `
+                <strong>${chamada.consultorio}</strong> - ${chamada.paciente}
                 <small>${chamada.hora || ''}</small>
-            </li>
-        `).join('');
-        
-        elementos.listaEl.innerHTML = novoHTML;
-        console.log('📋 Histórico atualizado');
+            `;
+            elementos.listaEl.appendChild(li);
+        });
     }
     
     // ========== FUNÇÃO PRINCIPAL - VERIFICAR E EXIBIR CHAMADAS ==========
@@ -304,6 +254,14 @@ document.addEventListener("DOMContentLoaded", () => {
         
         if (!chamada || !chamada.id) {
             // Sem chamadas pendentes
+            console.log('💤 Sem chamadas pendentes');
+            
+            // Atualizar histórico periodicamente (a cada 5 verificações)
+            if (Math.random() < 0.2) {
+                const historico = await buscarHistorico();
+                atualizarHistorico(historico);
+            }
+            
             return;
         }
         
@@ -316,10 +274,10 @@ document.addEventListener("DOMContentLoaded", () => {
         
         // Atualizar interface
         if (elementos.pacienteEl) {
-            elementos.pacienteEl.textContent = String(chamada.paciente || "--");
+            elementos.pacienteEl.textContent = chamada.paciente || "--";
         }
         if (elementos.consultorioEl) {
-            elementos.consultorioEl.textContent = String(chamada.consultorio || "--");
+            elementos.consultorioEl.textContent = chamada.consultorio || "--";
         }
         
         // Tocar som
@@ -333,13 +291,11 @@ document.addEventListener("DOMContentLoaded", () => {
             retrairTela();
             
             // Marcar como exibida no banco
-            const marcada = await marcarChamadaExibida(chamada.id);
+            await marcarChamadaExibida(chamada.id);
             
-            // Atualizar histórico apenas se marcação foi bem-sucedida
-            if (marcada) {
-                const historico = await buscarHistorico();
-                atualizarHistorico(historico);
-            }
+            // Atualizar histórico
+            const historico = await buscarHistorico();
+            atualizarHistorico(historico);
             
             // Liberar para próxima chamada
             exibindoChamada = false;
@@ -412,14 +368,6 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log(`📊 Configurações: Verificação a cada ${CONFIG.INTERVALO_VERIFICACAO/1000}s | Exibição por ${CONFIG.TEMPO_EXIBICAO/1000}s`);
         
         carregarVideoSalvo();
-        
-        // Carregar histórico inicial
-        buscarHistorico().then(historico => {
-            atualizarHistorico(historico);
-            console.log('📋 Histórico inicial carregado');
-        }).catch(err => {
-            console.warn('⚠️ Erro ao carregar histórico inicial:', err);
-        });
         
         // Primeira verificação imediata
         verificarChamadas();

@@ -5,11 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel de Chamadas - Hospital Centenário</title>
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/modal-setor.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <header>
+    <!-- Indicador de Setor (canto superior esquerdo) -->
+    <div id="setorIndicator" class="setor-indicator"></div>
+    
+    <header style="position: relative;">
         <h1>Hospital Centenário</h1>
         <h2>Tela de Chamada</h2>
+        <button id="btnConfigSetor" class="btn-config-setor" title="Configurar Setor da Tela">
+            <i class="fas fa-cog"></i>
+        </button>
     </header>
 
     <main>
@@ -34,10 +42,52 @@
 
     <audio id="alertaSom" src="../som/Alert1.mp3"></audio>
 
+    <!-- Modal de Configuração de Setor -->
+    <div id="modalSetor" class="modal-setor-overlay">
+        <div class="modal-setor-box">
+            <div class="modal-setor-header">
+                <i class="fas fa-hospital"></i>
+                <h2>Configuração do Painel</h2>
+                <p>Selecione o setor desta tela de exibição</p>
+            </div>
+            
+            <div class="modal-setor-opcoes">
+                <button class="btn-setor" data-setor="pronto-socorro">
+                    <i class="fas fa-ambulance"></i>
+                    <span>Pronto Socorro</span>
+                    <small>Acolhimento e Emergências</small>
+                </button>
+                
+                <button class="btn-setor" data-setor="ambulatorio">
+                    <i class="fas fa-user-md"></i>
+                    <span>Ambulatório</span>
+                    <small>Consultórios 01 a 05</small>
+                </button>
+            </div>
+            
+            <div class="modal-setor-footer">
+                <p id="setorAtualTexto">Setor atual: <strong>Não configurado</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay de Inicialização do Sistema de Som -->
+    <div id="inicializarSistema" class="inicializar-overlay">
+        <div class="inicializar-box">
+            <i class="fas fa-volume-up"></i>
+            <h2>Sistema de Chamadas</h2>
+            <p>Clique no botão abaixo para inicializar o sistema de áudio</p>
+            <button id="btnInicializar" class="btn-inicializar">
+                <i class="fas fa-play"></i> Iniciar Sistema
+            </button>
+        </div>
+    </div>
+
     <footer>
         <p>Desenvolvido por Nicolas Bica - Tela de Chamadas © 2025</p>
     </footer>
 
+    <script src="../script/modal-setor.js"></script>
     <script src="../script/script.js"></script>
 </body>
 </html>

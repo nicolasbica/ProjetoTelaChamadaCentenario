@@ -1,47 +1,275 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel Administrativo - Hospital Centenário</title>
-    <link rel="stylesheet" href="../css/style.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #002b55 0%, #004080 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: #003366;
+            padding: 30px 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            position: relative;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 5px;
+        }
+
+        header h2 {
+            font-size: 1.3em;
+            color: #ffcc00;
+            font-weight: 400;
+        }
+
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logout-btn:hover {
+            background-color: #c82333;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+        }
+
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        #setorSelector {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        #setorSelector h3 {
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .setor-label {
+            font-size: 1.2em;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 80px;
+            height: 40px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider-round {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #dc3545;
+            transition: 0.4s;
+            border-radius: 40px;
+        }
+
+        .slider-round:before {
+            position: absolute;
+            content: "";
+            height: 32px;
+            width: 32px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider-round {
+            background-color: #28a745;
+        }
+
+        input:checked + .slider-round:before {
+            transform: translateX(40px);
+        }
+
+        .chamada-form {
+            background: linear-gradient(135deg, rgba(0, 123, 255, 0.2), rgba(0, 51, 102, 0.2));
+            backdrop-filter: blur(15px);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #ffcc00;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            font-size: 1.1em;
+            background-color: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #007bff;
+            background-color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+        }
+
+        .form-group input:disabled {
+            background-color: #e9ecef;
+            cursor: not-allowed;
+        }
+
+        .btn-chamar {
+            width: 100%;
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1.3em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-chamar:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 123, 255, 0.5);
+        }
+
+        .btn-chamar:active {
+            transform: translateY(-1px);
+        }
+
+        footer {
+            background-color: #001a33;
+            padding: 20px;
+            text-align: center;
+            font-size: 0.9em;
+            color: rgba(255, 255, 255, 0.7);
+        }
+    </style>
 </head>
 <body>
     <header>
         <h1>Painel Administrativo</h1>
         <h2>Hospital Centenário</h2>
+        <button class="logout-btn" id="btnLogout">
+            <i class="fas fa-sign-out-alt"></i>
+            Sair
+        </button>
     </header>
 
-   <div id="setorSelector">
-        <h3>Selecione o Setor:</h3>
-        <div class="slider-container">
-            <span class="setor-label">
-                <i class="fas fa-cross"></i> Pronto Socorro
-            </span>
-            <label class="switch">
-                <input type="checkbox" id="slider">
-                <span class="slider-round"></span>
-            </label>
-            <span class="setor-label">
-                <i class="fas fa-syringe"></i> Ambulatório
-            </span>
+    <div class="container">
+        <div id="setorSelector">
+            <h3>Selecione o Setor</h3>
+            <div class="slider-container">
+                <span class="setor-label">
+                    <i class="fas fa-ambulance"></i> Pronto Socorro
+                </span>
+                <label class="switch">
+                    <input type="checkbox" id="slider">
+                    <span class="slider-round"></span>
+                </label>
+                <span class="setor-label">
+                    <i class="fas fa-hospital"></i> Ambulatório
+                </span>
+            </div>
         </div>
-    </div>
 
-    <form id="formChamada">
-        <label>Nome do Paciente:</label>
-        <input type="text" id="paciente" placeholder="Digite o nome do paciente" required>
-        <label>Consultório:</label>
-        <input type="text" id="consultorio" placeholder="Digite o número do consultório" required>
-        <button type="button" id="btnChamar">Chamar Paciente</button>
-    </form>
+        <div class="chamada-form">
+            <div class="form-group">
+                <label for="paciente">
+                    <i class="fas fa-user"></i> Nome do Paciente
+                </label>
+                <input type="text" id="paciente" placeholder="Digite o nome do paciente" autocomplete="off">
+            </div>
 
-    <div id="popup" class="popup">
-        <div class="popup-content">
-            <span class="popup-icon">✔️</span>
-            <p id="popup-message">Chamada registrada com sucesso!</p>
+            <div class="form-group">
+                <label for="consultorio">
+                    <i class="fas fa-door-open"></i> Consultório
+                </label>
+                <input type="text" id="consultorio" placeholder="Digite o número do consultório" autocomplete="off">
+            </div>
+
+            <button class="btn-chamar" id="btnChamar">
+                <i class="fas fa-bell"></i> Chamar Paciente
+            </button>
         </div>
     </div>
 
@@ -49,6 +277,7 @@
         <p>Desenvolvido por Nicolas Bica - Tela de Chamadas © 2025</p>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script src="../script/script-admin.js"></script>
 </body>
 </html>

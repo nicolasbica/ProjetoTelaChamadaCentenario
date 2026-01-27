@@ -30,7 +30,7 @@ header h2 {
 }
 
 /* Formulário Painel Administrativo */
-form {
+form, .form-container {
     background-color: #003366;
     width: 40%;
     margin: 0 auto;
@@ -44,7 +44,7 @@ form {
     gap: 15px; /* Espaçamento entre os elementos */
 }
 
-form label {
+form label, .form-container label {
     font-size: 1.2em;
     font-weight: bold;
     color: white;
@@ -52,7 +52,7 @@ form label {
     width: 100%; /* Alinha o texto à esquerda */
 }
 
-form input {
+form input, .form-container input {
     padding: 10px;
     border: none;
     border-radius: 5px;
@@ -60,7 +60,7 @@ form input {
     width: 100%; /* Faz o input ocupar toda a largura */
 }
 
-form button {
+form button, .form-container button {
     background-color: #007bff;
     color: white;
     border: none;
@@ -72,7 +72,7 @@ form button {
     transition: all 0.3s ease; /* Adiciona animação suave */
 }
 
-form button:hover {
+form button:hover, .form-container button:hover {
     background-color: #005dc1;
     transform: scale(1.1); /* Faz o botão expandir ao passar o mouse */
 }
@@ -370,4 +370,90 @@ footer {
 footer, p {
     margin: 0;
     opacity: 0.9; /*texto com transparência*/
+}
+
+/* Overlay de Inicialização do Sistema de Som */
+.inicializar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 43, 85, 0.98);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    animation: fadeIn 0.3s ease;
+}
+
+.inicializar-overlay.hidden {
+    display: none;
+}
+
+.inicializar-box {
+    background: linear-gradient(135deg, #004080 0%, #007bff 100%);
+    padding: 50px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    animation: scaleIn 0.4s ease;
+}
+
+.inicializar-box i.fa-volume-up {
+    font-size: 5em;
+    color: #ffcc00;
+    margin-bottom: 20px;
+    animation: pulse 2s infinite;
+}
+
+.inicializar-box h2 {
+    font-size: 2.5em;
+    margin: 20px 0;
+    color: white;
+}
+
+.inicializar-box p {
+    font-size: 1.3em;
+    color: #e0e0e0;
+    margin-bottom: 30px;
+}
+
+.btn-inicializar {
+    background: linear-gradient(135deg, #ffcc00 0%, #ff9900 100%);
+    color: #002b55;
+    border: none;
+    padding: 20px 50px;
+    font-size: 1.5em;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.btn-inicializar:hover {
+    transform: scale(1.1);
+    box-shadow: 0 5px 20px rgba(255, 204, 0, 0.5);
+}
+
+.btn-inicializar:active {
+    transform: scale(1.05);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
 }
