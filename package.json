@@ -1,0 +1,34 @@
+{
+  "name": "projeto-tela-chamada-centenario",
+  "version": "1.0.0",
+  "description": "Sistema de Chamadas Hospital Centenário - Painel de exibição e gerenciamento de chamadas por setor",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "dev": "node server/server.js"
+  },
+  "keywords": [
+    "hospital",
+    "chamadas",
+    "painel",
+    "centenario",
+    "queue",
+    "ambulatorio",
+    "pronto-socorro"
+  ],
+  "author": "Nicolas Bica",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "sqlite3": "^5.1.7",
+    "cors": "^2.8.5"
+  },
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nicolasbica/ProjetoTelaChamadaCentenario.git"
+  }
+}
