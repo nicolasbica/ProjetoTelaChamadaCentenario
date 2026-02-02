@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
         btnLogin.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Entrando...';
 
         try {
-            const response = await fetch("http://localhost:3000/login", {
+            const response = await fetch("/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
