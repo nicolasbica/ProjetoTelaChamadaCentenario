@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
     if (!painelJaInicializado) {
         console.log('🔧 Inicializando painel pela primeira vez...');
-        fetch(`http://localhost:3000/chamadas/inicializar/${setorPainel}`, {
+        fetch(`/chamadas/inicializar/${setorPainel}`, {
             method: 'POST'
         })
         .then(res => res.json())
@@ -174,7 +174,7 @@ document.addEventListener("DOMContentLoaded", () => {
     async function buscarProximaChamada() {
         try {
             const response = await fetchComTimeout(
-                `http://localhost:3000/chamadas/proxima/${setorPainel}`,
+                `/chamadas/proxima/${setorPainel}`,
                 { method: 'GET' }
             );
             
@@ -203,7 +203,7 @@ document.addEventListener("DOMContentLoaded", () => {
     async function marcarChamadaExibida(id) {
         try {
             const response = await fetchComTimeout(
-                `http://localhost:3000/chamadas/marcar-exibida/${id}`,
+                `/chamadas/marcar-exibida/${id}`,
                 { method: 'POST' }
             );
             
@@ -224,7 +224,7 @@ document.addEventListener("DOMContentLoaded", () => {
     async function buscarHistorico() {
         try {
             const response = await fetchComTimeout(
-                `http://localhost:3000/chamadas/historico/${setorPainel}`,
+                `/chamadas/historico/${setorPainel}`,
                 { method: 'GET' }
             );
             

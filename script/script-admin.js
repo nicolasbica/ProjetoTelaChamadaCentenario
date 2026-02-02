@@ -194,7 +194,7 @@ document.getElementById("btnChamar").addEventListener("click", async (e) => {
     console.log('📤 Enviando chamada:', chamada);
 
     try {
-        const response = await fetch("http://localhost:3000/chamada", {
+        const response = await fetch("/chamada", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
