@@ -24,12 +24,14 @@ app.use(cors());
 app.use(express.static(path.join(__dirname, '..')));
 
 // Banco de dados SQLite
-const db = new sqlite3.Database('./hospital.db', (err) => {
+const dbPath = path.join(__dirname, 'hospital.db');
+const db = new sqlite3.Database(dbPath, (err) => {
     if (err) {
         console.error('❌ Erro ao conectar ao banco de dados:', err.message);
         process.exit(1);
     } else {
         console.log('✅ Conectado ao banco de dados SQLite.');
+        console.log(`Caminho do banco: ${dbPath}`);
         inicializarBanco();
     }
 });
